@@ -13,9 +13,6 @@
     --accent-soft:#f1e2d6;
   }
   *{box-sizing:border-box;}
-  html{
-    -webkit-text-size-adjust:100%;
-  }
   body{
     margin:0;
     background:var(--paper);
@@ -25,7 +22,6 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    min-height:100vh;
   }
   h1{
     font-size:1.3rem;
@@ -43,9 +39,9 @@
     letter-spacing:0.03em;
     text-align:center;
   }
-  form{
+  .grid{
     display:flex;
-    gap:0;
+    flex-wrap:wrap;
     background:#fff;
     border:1px solid var(--line);
     width:100%;
@@ -54,8 +50,8 @@
   .col{
     display:flex;
     flex-direction:column;
+    flex:1 1 50%;
     border-right:1px solid var(--line);
-    flex:1;
     min-width:0;
   }
   .col:last-child{
@@ -65,20 +61,18 @@
     display:flex;
     align-items:center;
     gap:8px;
-    padding:13px 10px;
+    padding:14px 8px;
     border-bottom:1px solid var(--line);
     cursor:pointer;
-    font-size:0.82rem;
+    font-size:0.8rem;
     white-space:nowrap;
-    transition:background 0.12s ease;
     -webkit-tap-highlight-color:transparent;
     user-select:none;
-    touch-action:manipulation;
   }
   .col label:last-child{
     border-bottom:none;
   }
-  label:hover{
+  label:active{
     background:var(--accent-soft);
   }
   input[type="checkbox"]{
@@ -108,64 +102,11 @@
   }
   .daynum{
     font-weight:bold;
-    width:22px;
   }
   .weekday{
     color:#8b8678;
     font-size:0.68rem;
     text-transform:uppercase;
-    width:24px;
-  }
-  label.selected{
-    background:var(--accent-soft);
-  }
-  .footer{
-    margin-top:22px;
-    font-size:0.85rem;
-    min-height:1.4em;
-    color:var(--accent);
-    letter-spacing:0.02em;
-    text-align:center;
-    padding:0 8px;
-  }
-
-  /* Mobile: keep 5 columns but tighten spacing, type, and tap targets */
-  @media (max-width:640px){
-    form{
-      flex-wrap:wrap;
-      border:1px solid var(--line);
-    }
-    .col{
-      flex:1 1 33.33%;
-      border-right:1px solid var(--line);
-    }
-    .col:nth-child(3n){
-      border-right:none;
-    }
-    label{
-      padding:14px 6px;
-      font-size:0.78rem;
-      gap:6px;
-    }
-    .weekday{
-      width:auto;
-      font-size:0.62rem;
-    }
-    .daynum{
-      width:auto;
-    }
-  }
-
-  @media (max-width:380px){
-    .col{
-      flex:1 1 50%;
-    }
-    .col:nth-child(3n){
-      border-right:1px solid var(--line);
-    }
-    .col:nth-child(2n){
-      border-right:none;
-    }
   }
 </style>
 </head>
@@ -174,72 +115,46 @@
   <h1>Choose a Date</h1>
   <div class="range">June 20 &ndash; July 20</div>
 
-  <form id="dateForm"></form>
-  <div class="footer" id="result"></div>
+  <form class="grid">
 
-<script>
-  const startDate = new Date(2026, 5, 20); // June 20, 2026
-  const totalDays = 31;
-  const numCols = 5;
+    <div class="col">
+      <label><input type="checkbox" name="d20" checked><span class="weekday">Sat</span><span class="daynum">Jun 20</span></label>
+      <label><input type="checkbox" name="d21"><span class="weekday">Sun</span><span class="daynum">Jun 21</span></label>
+      <label><input type="checkbox" name="d22"><span class="weekday">Mon</span><span class="daynum">Jun 22</span></label>
+      <label><input type="checkbox" name="d23"><span class="weekday">Tue</span><span class="daynum">Jun 23</span></label>
+      <label><input type="checkbox" name="d24"><span class="weekday">Wed</span><span class="daynum">Jun 24</span></label>
+      <label><input type="checkbox" name="d25"><span class="weekday">Thu</span><span class="daynum">Jun 25</span></label>
+      <label><input type="checkbox" name="d26"><span class="weekday">Fri</span><span class="daynum">Jun 26</span></label>
+      <label><input type="checkbox" name="d27"><span class="weekday">Sat</span><span class="daynum">Jun 27</span></label>
+      <label><input type="checkbox" name="d28"><span class="weekday">Sun</span><span class="daynum">Jun 28</span></label>
+      <label><input type="checkbox" name="d29"><span class="weekday">Mon</span><span class="daynum">Jun 29</span></label>
+      <label><input type="checkbox" name="d30"><span class="weekday">Tue</span><span class="daynum">Jun 30</span></label>
+      <label><input type="checkbox" name="d31"><span class="weekday">Wed</span><span class="daynum">Jul 1</span></label>
+      <label><input type="checkbox" name="d32"><span class="weekday">Thu</span><span class="daynum">Jul 2</span></label>
+      <label><input type="checkbox" name="d33"><span class="weekday">Fri</span><span class="daynum">Jul 3</span></label>
+      <label><input type="checkbox" name="d34"><span class="weekday">Sat</span><span class="daynum">Jul 4</span></label>
+      <label><input type="checkbox" name="d35"><span class="weekday">Sun</span><span class="daynum">Jul 5</span></label>
+    </div>
 
-  const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    <div class="col">
+      <label><input type="checkbox" name="d36"><span class="weekday">Mon</span><span class="daynum">Jul 6</span></label>
+      <label><input type="checkbox" name="d37"><span class="weekday">Tue</span><span class="daynum">Jul 7</span></label>
+      <label><input type="checkbox" name="d38"><span class="weekday">Wed</span><span class="daynum">Jul 8</span></label>
+      <label><input type="checkbox" name="d39"><span class="weekday">Thu</span><span class="daynum">Jul 9</span></label>
+      <label><input type="checkbox" name="d40"><span class="weekday">Fri</span><span class="daynum">Jul 10</span></label>
+      <label><input type="checkbox" name="d41"><span class="weekday">Sat</span><span class="daynum">Jul 11</span></label>
+      <label><input type="checkbox" name="d42"><span class="weekday">Sun</span><span class="daynum">Jul 12</span></label>
+      <label><input type="checkbox" name="d43"><span class="weekday">Mon</span><span class="daynum">Jul 13</span></label>
+      <label><input type="checkbox" name="d44"><span class="weekday">Tue</span><span class="daynum">Jul 14</span></label>
+      <label><input type="checkbox" name="d45"><span class="weekday">Wed</span><span class="daynum">Jul 15</span></label>
+      <label><input type="checkbox" name="d46"><span class="weekday">Thu</span><span class="daynum">Jul 16</span></label>
+      <label><input type="checkbox" name="d47"><span class="weekday">Fri</span><span class="daynum">Jul 17</span></label>
+      <label><input type="checkbox" name="d48"><span class="weekday">Sat</span><span class="daynum">Jul 18</span></label>
+      <label><input type="checkbox" name="d49"><span class="weekday">Sun</span><span class="daynum">Jul 19</span></label>
+      <label><input type="checkbox" name="d50"><span class="weekday">Mon</span><span class="daynum">Jul 20</span></label>
+    </div>
 
-  const days = [];
-  for (let i = 0; i < totalDays; i++) {
-    const d = new Date(startDate);
-    d.setDate(startDate.getDate() + i);
-    days.push(d);
-  }
-
-  // split into 5 columns, as even as possible (6 rows, last col gets the extra day)
-  const base = Math.floor(totalDays / numCols); // 6
-  const extra = totalDays % numCols; // 1
-  const columns = [];
-  let idx = 0;
-  for (let c = 0; c < numCols; c++) {
-    const count = base + (c < extra ? 1 : 0);
-    columns.push(days.slice(idx, idx + count));
-    idx += count;
-  }
-
-  const form = document.getElementById("dateForm");
-  const result = document.getElementById("result");
-
-  columns.forEach(colDays => {
-    const colDiv = document.createElement("div");
-    colDiv.className = "col";
-    colDays.forEach(d => {
-      const iso = d.toISOString().slice(0,10);
-      const label = document.createElement("label");
-      label.innerHTML = `
-        <input type="checkbox" name="chosenDate" value="${iso}">
-        <span class="weekday">${dayNames[d.getDay()]}</span>
-        <span class="daynum">${monthNames[d.getMonth()]} ${d.getDate()}</span>
-      `;
-      colDiv.appendChild(label);
-      form.appendChild(colDiv);
-    });
-  });
-
-  function updateResult() {
-    const checked = Array.from(form.querySelectorAll('input[type="checkbox"]:checked'));
-    if (checked.length === 0) {
-      result.textContent = "";
-      return;
-    }
-    const labels = checked.map(input => {
-      const d = new Date(input.value + "T00:00:00");
-      return `${monthNames[d.getMonth()]} ${d.getDate()}`;
-    });
-    result.textContent = `Selected (${checked.length}): ${labels.join(", ")}`;
-  }
-
-  form.addEventListener("change", (e) => {
-    e.target.closest("label").classList.toggle("selected", e.target.checked);
-    updateResult();
-  });
-</script>
+  </form>
 
 </body>
 </html>
