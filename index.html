@@ -1,13 +1,245 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  </head>
-  <body>
-    <h1 class="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pick a Day</title>
+<style>
+  :root{
+    --paper:#f6f3ee;
+    --ink:#23241f;
+    --line:#d8d2c4;
+    --accent:#b5562a;
+    --accent-soft:#f1e2d6;
+  }
+  *{box-sizing:border-box;}
+  html{
+    -webkit-text-size-adjust:100%;
+  }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: 'Courier New', Consolas, monospace;
+    padding:32px 16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+  }
+  h1{
+    font-size:1.3rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin:0 0 4px 0;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:10px;
+    text-align:center;
+  }
+  .range{
+    font-size:0.85rem;
+    color:#6b675c;
+    margin-bottom:24px;
+    letter-spacing:0.03em;
+    text-align:center;
+  }
+  form{
+    display:flex;
+    gap:0;
+    background:#fff;
+    border:1px solid var(--line);
+    width:100%;
+    max-width:760px;
+  }
+  .col{
+    display:flex;
+    flex-direction:column;
+    border-right:1px solid var(--line);
+    flex:1;
+    min-width:0;
+  }
+  .col:last-child{
+    border-right:none;
+  }
+  label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:13px 10px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+    font-size:0.82rem;
+    white-space:nowrap;
+    transition:background 0.12s ease;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;
+    touch-action:manipulation;
+  }
+  .col label:last-child{
+    border-bottom:none;
+  }
+  label:hover{
+    background:var(--accent-soft);
+  }
+  input[type="checkbox"]{
+    appearance:none;
+    width:18px;
+    height:18px;
+    border:1.5px solid var(--ink);
+    border-radius:4px;
+    margin:0;
+    position:relative;
+    flex-shrink:0;
+  }
+  input[type="checkbox"]:checked{
+    border-color:var(--accent);
+    background:var(--accent);
+  }
+  input[type="checkbox"]:checked::after{
+    content:"";
+    position:absolute;
+    left:5px;
+    top:1px;
+    width:5px;
+    height:9px;
+    border:solid #fff;
+    border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+  .daynum{
+    font-weight:bold;
+    width:22px;
+  }
+  .weekday{
+    color:#8b8678;
+    font-size:0.68rem;
+    text-transform:uppercase;
+    width:24px;
+  }
+  label.selected{
+    background:var(--accent-soft);
+  }
+  .footer{
+    margin-top:22px;
+    font-size:0.85rem;
+    min-height:1.4em;
+    color:var(--accent);
+    letter-spacing:0.02em;
+    text-align:center;
+    padding:0 8px;
+  }
+
+  /* Mobile: keep 5 columns but tighten spacing, type, and tap targets */
+  @media (max-width:640px){
+    form{
+      flex-wrap:wrap;
+      border:1px solid var(--line);
+    }
+    .col{
+      flex:1 1 33.33%;
+      border-right:1px solid var(--line);
+    }
+    .col:nth-child(3n){
+      border-right:none;
+    }
+    label{
+      padding:14px 6px;
+      font-size:0.78rem;
+      gap:6px;
+    }
+    .weekday{
+      width:auto;
+      font-size:0.62rem;
+    }
+    .daynum{
+      width:auto;
+    }
+  }
+
+  @media (max-width:380px){
+    .col{
+      flex:1 1 50%;
+    }
+    .col:nth-child(3n){
+      border-right:1px solid var(--line);
+    }
+    .col:nth-child(2n){
+      border-right:none;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <h1>Choose a Date</h1>
+  <div class="range">June 20 &ndash; July 20</div>
+
+  <form id="dateForm"></form>
+  <div class="footer" id="result"></div>
+
+<script>
+  const startDate = new Date(2026, 5, 20); // June 20, 2026
+  const totalDays = 31;
+  const numCols = 5;
+
+  const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  const days = [];
+  for (let i = 0; i < totalDays; i++) {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    days.push(d);
+  }
+
+  // split into 5 columns, as even as possible (6 rows, last col gets the extra day)
+  const base = Math.floor(totalDays / numCols); // 6
+  const extra = totalDays % numCols; // 1
+  const columns = [];
+  let idx = 0;
+  for (let c = 0; c < numCols; c++) {
+    const count = base + (c < extra ? 1 : 0);
+    columns.push(days.slice(idx, idx + count));
+    idx += count;
+  }
+
+  const form = document.getElementById("dateForm");
+  const result = document.getElementById("result");
+
+  columns.forEach(colDays => {
+    const colDiv = document.createElement("div");
+    colDiv.className = "col";
+    colDays.forEach(d => {
+      const iso = d.toISOString().slice(0,10);
+      const label = document.createElement("label");
+      label.innerHTML = `
+        <input type="checkbox" name="chosenDate" value="${iso}">
+        <span class="weekday">${dayNames[d.getDay()]}</span>
+        <span class="daynum">${monthNames[d.getMonth()]} ${d.getDate()}</span>
+      `;
+      colDiv.appendChild(label);
+      form.appendChild(colDiv);
+    });
+  });
+
+  function updateResult() {
+    const checked = Array.from(form.querySelectorAll('input[type="checkbox"]:checked'));
+    if (checked.length === 0) {
+      result.textContent = "";
+      return;
+    }
+    const labels = checked.map(input => {
+      const d = new Date(input.value + "T00:00:00");
+      return `${monthNames[d.getMonth()]} ${d.getDate()}`;
+    });
+    result.textContent = `Selected (${checked.length}): ${labels.join(", ")}`;
+  }
+
+  form.addEventListener("change", (e) => {
+    e.target.closest("label").classList.toggle("selected", e.target.checked);
+    updateResult();
+  });
+</script>
+
+</body>
 </html>
